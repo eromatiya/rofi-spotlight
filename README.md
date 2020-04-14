@@ -1,4 +1,4 @@
-A Spotlight-like rofi. Supports file and web search. 
+A Spotlight-like rofi. Supports file and web search[WIP]. 
 
 ![screenshot](screenshots/main.png)
 ![screenshot](screenshots/menu.png)
