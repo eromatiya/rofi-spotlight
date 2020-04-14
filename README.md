@@ -1,0 +1,1 @@
+A Spotlight-like rofi. Supports file and web search. 
