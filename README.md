@@ -4,6 +4,10 @@ A Spotlight-like rofi. Supports file and web search[WIP].
 | --- | --- |
 | ![screenshot](screenshots/main.png) | ![screenshot](screenshots/menu.png) |
 
+| Google Results | DuckDuckGo Results
+| --- | --- |
+| ![screenshot](screenshots/rofi-web-google.png) | ![screenshot](screenshots/rofi-web-ddg.png) |
+
 This rofi will supposed to replace the web search in my awesome-wm setups.
 
 #### Dependencies
