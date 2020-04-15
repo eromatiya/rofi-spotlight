@@ -246,7 +246,7 @@ function web_search() {
 if [ ! -z "$@" ] && [[ "$@" == ":webbro"* ]]
 then
 	remove=":webbro "
-
+	
 	# Search directly from your web browser
 	web_search "$(printf '%s\n' "${1//$remove/}")"
 	exit;
