@@ -91,13 +91,23 @@ then
 	echo "	:xdg doc"
 	echo "	:xdg down"
 	echo " "
-	echo "Search syntaxes:"
-	echo "!<search_query> to search"
+	echo "File search syntaxes:"
+	echo "!<search_query> to search for a file"
 	echo "?<search_query> to search parent directories"
 	echo "Examples:"
 	echo "	!half-life 3"
 	echo " 	?portal 3"
+	echo " "
+	echo "Web search syntaxes:"
+	echo "!<search_query> to search the web"
+	echo ":web to also search the web"
+	echo ":webbro to search directly to your browser"
+	echo "Examples:"
+	echo "	!how to install archlinux"
+	echo "	:web how to install gentoo"
+	echo "	:webbro how to install wine in windowsxp"
 
+	exit;
 fi
 
 function icon_file_type(){
@@ -225,6 +235,32 @@ function icon_file_type(){
 	echo "${1}""\0icon\x1f""${icon_name}""\n"
 }
 
+
+function web_search() {
+
+	# Pass the search query to web-search script
+	python "$(dirname "$0")/web-search.py" "${1}"
+	exit;
+}
+
+if [ ! -z "$@" ] && [[ "$@" == ":webbro"* ]]
+then
+	remove=":webbro "
+
+	# Search directly from your web browser
+	web_search "$(printf '%s\n' "${1//$remove/}")"
+	exit;
+
+elif [ ! -z "$@" ] && [[ "$@" == ":web"* ]]
+then
+	remove=":web "
+
+	# Get search suggestions
+	web_search "!$(printf '%s\n' "${1//$remove/}")"
+	exit;
+fi
+
+
 if [ ! -z "$@" ] && ([[ "$@" == /* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
 then
 	QUERY=$@
@@ -248,12 +284,15 @@ then
 		while read -r line
 		do
 			echo "$line" \?\?
-		done <<< $(find / -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+		done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 	else
-		find / -iname *"${QUERY#!}"* -exec echo -ne \
+		find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
 		"{}\0icon\x1f${HOME}/.config/awesome/configuration/rofi/sidebar/icons/suggestion.svg\n" \; 2>&1 | 
 		grep -av 'Permission denied\|Input/output error'
+
+		# notify-send "${QUERY}"
+		web_search "${QUERY}"
 		# export -f icon_file_type
 		# # find $HOME -iname *"${QUERY#!}"* 2>&1 | xargs bash -i -c 'printf $(icon_file_type "${@}")' _
 		# echo "$(icon_file_type "`find $HOME -iname *"${QUERY#!}"* 2>&1`")"
