@@ -6,17 +6,22 @@ A Spotlight-like rofi. Supports file and web search[WIP].
 
 This rofi will supposed to replace the web search in my awesome-wm setups.
 
+#### Dependencies
++ `rofi git master branch`
++ `python3`
++ `bash`
++ `an icon theme (optional)`
+
+#### Icon themes used:
++ Papirus
++ Tela Blue
+
 #### Run it by:
 
 ```bash
 $ rofi -modi "Global Search":"rofi-spotlight/rofi-spotlight.sh" -show "Global Search" \
 -config rofi-spotlight/rofi.rasi
 ```
-
-#### Icon themes used:
-
-+ Papirus
-+ Tela Blue
 
 #### Configuration:
 You can change the following variables in the `rofi-spotlight.sh`
