@@ -27,7 +27,7 @@ window {
 	height:		 					500px;
 	width:		 					750px;
 	orientation: 					vertical;
-    border-radius:                  12px;
+    border-radius:                  9px;
 }
 
 mainbox {
@@ -36,8 +36,8 @@ mainbox {
 	padding: 						5px 5px 5px 5px;
 	width:							200px;
 	expand: 						true;
-	spacing: 12px;
-	children: 						[ inputbar, listview];
+	spacing:                        12px;
+	children: 						[ inputbar, listview ];
 }
 
 scrollbar {
@@ -96,7 +96,9 @@ inputbar {
     background-color:               @background-alt;
     text-color:                     @foreground;
     expand:                         false;
-    border-radius:                  9px;
+    border-radius:                  6px;
+    border:                         0 0 2px;
+    border-color:                   @background-alt;
     position:                       north;
     children:                       [ entry-wrapper ];
 }
