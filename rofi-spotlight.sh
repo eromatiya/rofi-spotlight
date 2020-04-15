@@ -77,12 +77,13 @@ fi
 if [[ ! -z "$@" ]] && [[ "$@" == ":help" ]]
 then
 
-	echo "Rofi file browser"
+	echo "Rofi Spotlight"
+	echo "A Rofi with file and web searching functionality"
 	echo " "
 	echo "Commands:"
-	echo ":help to print help message"
+	echo ":help to print this help message"
 	echo ":h or :hidden to show hidden files/dirs"
-	echo ":xdg to jump to the xdg directory"
+	echo ":xdg to jump to an xdg directory"
 	echo "Examples:"
 	echo "	:xdg DOCUMENTS"
 	echo "	:xdg DOWNLOADS"
@@ -90,6 +91,8 @@ then
 	echo "Examples:"
 	echo "	:xdg doc"
 	echo "	:xdg down"
+	echo "For more info about XDG dirs, see:"
+	echo "\`man xdg-user-dir\`"
 	echo " "
 	echo "File search syntaxes:"
 	echo "!<search_query> to search for a file"
@@ -99,9 +102,9 @@ then
 	echo " 	?portal 3"
 	echo " "
 	echo "Web search syntaxes:"
-	echo "!<search_query> to search the web"
-	echo ":web to also search the web"
-	echo ":webbro to search directly to your browser"
+	echo "!<search_query> to gets search suggestions"
+	echo ":web to also to gets search suggestions"
+	echo ":webbro to search directly from your browser"
 	echo "Examples:"
 	echo "	!how to install archlinux"
 	echo "	:web how to install gentoo"
@@ -246,7 +249,7 @@ function web_search() {
 if [ ! -z "$@" ] && [[ "$@" == ":webbro"* ]]
 then
 	remove=":webbro "
-	
+
 	# Search directly from your web browser
 	web_search "$(printf '%s\n' "${1//$remove/}")"
 	exit;

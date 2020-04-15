@@ -29,6 +29,58 @@ You can change the following variables in the `rofi-spotlight.sh`
 + File Manager
 + Bluetooth sender
 
+You can change the following variables in the `web-search.py`
++ Search engine
++ Web browser
++ Terminal Emulator
+
+
+#### Available commands:
+
+Just type them on rofi search bar:
+
++ **`:help`** to print the help message  
++ **`:h`** or **`:hidden`** to show hidden files/directories  
++ **`:xdg XDGDIR`** to jump to an xdg directory  
+
+Examples:
+
+```bash
+:xdg DOCUMENTS
+:xdg DOWNLOADS
+
+# Also supports incomplete path:
+# Examples:
+:xdg doc 	# Same as :xdg DOCUMENTS
+:xdg down 	# Same as :xdg DOWNLOADS
+
+# For more info about XDG dirs, see:
+# man xdg-user-dir
+```
+
+**File search syntaxes:**
++ **`!<search_query>`** to search for a file and web suggestions  
++ **`?<search_query>`** to search parent directories  
+
+Examples:
+```bash
+!half-life 3
+?portal 3
+```
+
+**Web search syntaxes:**
+
++ **`!<search_query>`** to get a search suggestions  
++ **`:web <search_query>`** to also to gets search suggestions  
++ **`:webbro <search_query>`** to search directly from your browser  
+
+Examples:
+```bash
+!how to install archlinux
+:web how to install gentoo
+:webbro how to install wine in windowsxp
+```
+
 #### TODOs:
 - [x] Web search support
 - [ ] Cleaner bash script
