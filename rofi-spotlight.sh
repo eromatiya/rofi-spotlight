@@ -240,7 +240,6 @@ function icon_file_type(){
 
 
 function web_search() {
-
 	# Pass the search query to web-search script
 	python "$(dirname "$0")/web-search.py" "${1}"
 	exit;
@@ -290,15 +289,13 @@ then
 		done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 	else
+		# Find the file
 		find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
-		"{}\0icon\x1f${HOME}/.config/awesome/configuration/rofi/sidebar/icons/suggestion.svg\n" \; 2>&1 | 
+		"{}\0icon\x1f$(dirname "$0")/icons/result.svg\n" \; 2>&1 | 
 		grep -av 'Permission denied\|Input/output error'
 
-		# notify-send "${QUERY}"
+		# Web search
 		web_search "${QUERY}"
-		# export -f icon_file_type
-		# # find $HOME -iname *"${QUERY#!}"* 2>&1 | xargs bash -i -c 'printf $(icon_file_type "${@}")' _
-		# echo "$(icon_file_type "`find $HOME -iname *"${QUERY#!}"* 2>&1`")"
 	fi
 	exit;
 fi
