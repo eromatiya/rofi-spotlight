@@ -334,7 +334,7 @@ function create_notification() {
 		notify-send -a "Global Search" "<b>Permission denied!</b>" \
 		'You have no permission to access '"<b>${CUR_DIR}</b>!"
 	
-	elif [[ "${1}" == 'cleared' ]]
+	elif [[ "${1}" == "cleared" ]]
 	then
 		notify-send -a "Global Search" "<b>Success!</b>" \
 		'Search history has been successfully cleared!'
@@ -476,7 +476,7 @@ elif [ ! -z "$@" ] && ([[ "$@" == ":ch" ]] || [[ "$@" == ":clear_hist" ]])
 then
 	:> "${HIST_FILE}"
 	create_notification cleared
-	
+
 	CUR_DIR="${HOME}"
 	navigate_to
 	exit;
