@@ -141,11 +141,20 @@ def fetch_suggestions(search_string):
 def main():
     search_string = html.unescape((' '.join(sys.argv[1:])).strip())
 
+    path_str = os.path.dirname(os.path.realpath(__file__)) + '/'
+    icon_path_str = path_str + 'icons/'
+    icon_name = icon_path_str
+
+    if SEARCH_ENGINE == 'google':
+        icon_name += 'google.svg'
+    else:
+        icon_name += 'ddg.svg'
+
     if search_string.startswith('!'):
         search_string = search_string.rstrip('!').strip()
         results = fetch_suggestions(search_string)
         for r in results:
-            print(html.unescape(r))
+            print(html.unescape(r) + "\0icon\x1f"+icon_name+"\n")
     else:
         url = CONFIG['SEARCH_URL'][SEARCH_ENGINE] + urllib.parse.quote_plus(search_string)
         sp.Popen(CONFIG['BROWSER_PATH'][BROWSER] + [url], stdout=sp.DEVNULL, stderr=sp.DEVNULL, shell=False)
