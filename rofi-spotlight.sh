@@ -400,7 +400,6 @@ function navigate_to() {
 			printf "$(icon_file_type "${i}")";
 		fi
 	done
-
 }
 
 # Set XDG dir
@@ -450,8 +449,8 @@ function return_xdg_dir() {
 	else
 		CUR_DIR="${HOME}"
 	fi
-
 	navigate_to
+	exit;
 }
 
 # Show and Clear History
@@ -475,7 +474,7 @@ then
 elif [ ! -z "$@" ] && ([[ "$@" == ":ch" ]] || [[ "$@" == ":clear_hist" ]])
 then
 	:> "${HIST_FILE}"
-	create_notification cleared
+	create_notification "cleared"
 
 	CUR_DIR="${HOME}"
 	navigate_to
@@ -505,11 +504,9 @@ fi
 
 if [[ ! -z "$@" ]] && ([[ "$@" == ":h" ]] || [[ "$@" == ":hidden" ]])
 then
-
 	SHOW_HIDDEN=true
-
 	navigate_to
-
+	exit;
 fi
 
 # Handle argument.
@@ -641,7 +638,7 @@ function context_menu() {
 	then
 		print_context_menu IMAGE_OPTIONS[@]
 	
-	elif [[ "${type}" == "image/x-xcf" ]] || [[ "${type}" == "svg+xml" ]]
+	elif [[ "${type}" == "image/x-xcf" ]] || [[ "${type}" == "image/svg+xml" ]]
 	then
 		print_context_menu XCF_SVG_OPTIONS[@]
 	
@@ -661,7 +658,6 @@ function context_menu() {
 			grep -av 'Permission denied\|Input/output error'
 
 			web_search "!${QUERY}"
-			exit;
 		else
 			coproc ( ${OPENER} "${CUR_DIR}" & > /dev/null  2>&1 )
 		fi
@@ -670,9 +666,7 @@ function context_menu() {
 
 }
 
-
 # If argument is not a directory/folder
-
 if [ ! -d "${CUR_DIR}" ]
 then
 	echo "${CUR_DIR}" > "${CURRENT_FILE}"
