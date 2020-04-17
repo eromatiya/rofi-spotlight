@@ -333,7 +333,14 @@ function create_notification() {
 	then
 		notify-send -a "Global Search" "<b>Permission denied!</b>" \
 		'You have no permission to access '"<b>${CUR_DIR}</b>!"
-	
+	elif [[ "${1}" == "deleted" ]]
+	then
+		notify-send -a "Global Search" "<b>Success!</b>" \
+		'File deleted!'
+	elif [[ "${1}" == "trashed" ]]
+	then
+		notify-send -a "Global Search" "<b>Success!</b>" \
+		'The file has been moved to trash!'	
 	elif [[ "${1}" == "cleared" ]]
 	then
 		notify-send -a "Global Search" "<b>Success!</b>" \
@@ -549,11 +556,13 @@ then
 		"Move to trash" )
 			coproc( gio trash "$(cat "${CURRENT_FILE}")" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
+			create_notification "trashed"
 			;;
 		"Delete" )
 			kill -9 $(pgrep rofi)
 			shred "$(cat "${CURRENT_FILE}")"
 			rm "$(cat "${CURRENT_FILE}")"
+			create_notification "deleted"
 			;;
 		"Send via Bluetooth" )
 			rfkill unblock bluetooth &&	bluetoothctl power on 
