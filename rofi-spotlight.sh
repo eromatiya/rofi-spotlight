@@ -555,14 +555,16 @@ then
 			;;
 		"Move to trash" )
 			coproc( gio trash "$(cat "${CURRENT_FILE}")" & > /dev/null 2>&1 )
-			kill -9 $(pgrep rofi)
 			create_notification "trashed"
+			CUR_DIR="$(dirname $(cat "${CURRENT_FILE}"))"
+			navigate_to
 			;;
 		"Delete" )
-			kill -9 $(pgrep rofi)
 			shred "$(cat "${CURRENT_FILE}")"
 			rm "$(cat "${CURRENT_FILE}")"
 			create_notification "deleted"
+			CUR_DIR="$(dirname $(cat "${CURRENT_FILE}"))"
+			navigate_to
 			;;
 		"Send via Bluetooth" )
 			rfkill unblock bluetooth &&	bluetoothctl power on 
