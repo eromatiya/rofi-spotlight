@@ -90,4 +90,7 @@ Examples:
 - [ ] Cleaner bash script
 
 
-I'm fairly new on scripting something like this big, so pardon me if my code is kinda ugly, boilerplate and obscure. I will improve this from time to time, for sure.
+#### Notes:
+
++ This is not a file manager and web a browser. This is meant to be only a file/web-searching rofi. Nothing else.
++ I'm fairly new on scripting something like this big, so pardon me if my code is kinda ugly, boilerplate and obscure. I will improve this from time to time, for sure.
