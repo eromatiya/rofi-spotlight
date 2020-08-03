@@ -11,7 +11,7 @@ A Spotlight-like rofi. Supports file and web search.
 This rofi will supposed to replace the web search in my awesome-wm setups.
 
 #### Dependencies
-+ `rofi git master branch`
++ `rofi-git master branch`
 + `python3`
 + `bash`
 + `an icon theme (optional)`
@@ -38,7 +38,6 @@ You can change the following variables in the `web-search.py`
 + Web browser
 + Terminal Emulator
 
-
 #### Available commands:
 
 Just type them on rofi search bar:
@@ -49,12 +48,12 @@ Just type them on rofi search bar:
 
 Examples:
 
-```bash
+```
 :xdg DOCUMENTS
 :xdg DOWNLOADS
 
-# Also supports incomplete path:
-# Examples:
+# Also supports incomplete path. Examples:
+
 :xdg doc 	# Same as :xdg DOCUMENTS
 :xdg down 	# Same as :xdg DOWNLOADS
 
@@ -67,7 +66,8 @@ Examples:
 + **`?<search_query>`** to search parent directories  
 
 Examples:
-```bash
+
+```
 !half-life 3
 ?portal 3
 ```
@@ -79,7 +79,8 @@ Examples:
 + **`:webbro <search_query>`** to search directly from your browser  
 
 Examples:
-```bash
+
+```
 !how to install archlinux
 :web how to install gentoo
 :webbro how to install wine in windowsxp
@@ -89,8 +90,8 @@ Examples:
 - [x] Web search support
 - [ ] Cleaner bash script
 
-
 #### Notes:
 
-+ This is not a file manager and web a browser. This is meant to be only a file/web-searching rofi. Nothing else.
++ This is not a file manager and web a browser. This is meant to be a file/web-searching rofi. Nothing else.
 + I'm fairly new on scripting something like this big, so pardon me if my code is kinda ugly, boilerplate and obscure. I will improve this from time to time, for sure.
++ Better with blur. Rofi's appearance can be change in `rofi.rasi`. It uses CSS syntax. More info by executing `man rofi-theme` in your terminal emulator.
