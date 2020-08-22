@@ -18,8 +18,8 @@ MY_PATH="$(dirname "${0}")"
 HIST_FILE="${MY_PATH}/history.txt"
 
 OPENER=xdg-open
-TERM_EMU=kitty
-TEXT_EDITOR=nvim
+TERM_EMU=$TERMINAL
+TEXT_EDITOR=$EDITOR
 FILE_MANAGER=nautilus
 BLUETOOTH_SEND=blueman-sendto
 
@@ -291,7 +291,7 @@ function icon_file_type(){
 }
 
 
-# Pass the argument to python scrupt
+# Pass the argument to python script
 function web_search() {
 	# Pass the search query to web-search script
 	"${MY_PATH}/web-search.py" "${1}"
