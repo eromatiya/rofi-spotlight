@@ -19,15 +19,15 @@ HIST_FILE="${MY_PATH}/history.txt"
 
 OPENER=xdg-open
 TERM_EMU=kitty
-TEXT_EDITOR=${EDITOR}
-FILE_MANAGER=dolphin
+TEXT_EDITOR=nvim
+FILE_MANAGER=nautilus
 BLUETOOTH_SEND=blueman-sendto
 
 CUR_DIR=$PWD
 
 NEXT_DIR=""
 
-SHOW_HIDDEN=false
+SHOW_HIDDEN=true
 
 declare -a SHELL_OPTIONS=(
 	"Run"
@@ -291,7 +291,7 @@ function icon_file_type(){
 }
 
 
-# Pass the argument to python script
+# Pass the argument to python scrupt
 function web_search() {
 	# Pass the search query to web-search script
 	"${MY_PATH}/web-search.py" "${1}"
@@ -356,11 +356,11 @@ then
 		while read -r line
 		do
 			echo "$line" \?\?
-		done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+		done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 	else
 		# Find the file
-		find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
+		fd -H ${QUERY:1} ${HOME} -x echo -ne \
 		"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
 		grep -av 'Permission denied\|Input/output error'
 
@@ -721,7 +721,7 @@ function context_menu() {
 
 			echo "${QUERY}" >> "${HIST_FILE}"
 
-			find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
+			fd -H ${QUERY#!} ${HOME} -x echo -ne \
 			"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
 			grep -av 'Permission denied\|Input/output error'
 
