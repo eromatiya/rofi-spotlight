@@ -18,7 +18,7 @@ MY_PATH="$(dirname "${0}")"
 HIST_FILE="${MY_PATH}/history.txt"
 
 OPENER=xdg-open
-TERM_EMU=$TERMINAL
+TERM_EMU=kitty
 TEXT_EDITOR=$EDITOR
 FILE_MANAGER=nautilus
 BLUETOOTH_SEND=blueman-sendto
