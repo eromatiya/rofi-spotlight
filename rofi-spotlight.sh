@@ -360,9 +360,12 @@ then
 
 	else
 		# Find the file
-		fd -H ${QUERY:1} ${HOME} -x echo -ne \
-		"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-		grep -av 'Permission denied\|Input/output error'
+		if [[ "${QUERY}" =~ '[\. ]' ]]
+        then
+		    fd -H ${QUERY:1} ${HOME} -x echo -ne \
+		    "{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+		    grep -av 'Permission denied\|Input/output error'
+        fi
 
 		# Web search
 		web_search "${QUERY}"
