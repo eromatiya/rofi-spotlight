@@ -287,7 +287,7 @@ function icon_file_type(){
 			;;
 	esac
 
-	echo "${1}""\0icon\x1f""${icon_name}""\n"
+	echo -en "$1\0icon\x1f$icon_name\n"
 }
 
 
@@ -424,7 +424,7 @@ function navigate_to() {
 		do
 			if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
 			then
-				printf "$(icon_file_type "${i}")";
+				icon_file_type "${i}"
 			fi
 		done
 
@@ -432,7 +432,7 @@ function navigate_to() {
 		do 
 			if [[ -f "${i}" ]]
 			then
-				printf "$(icon_file_type "${i}")";
+				icon_file_type "${i}"
 			fi
 		done
 
@@ -442,7 +442,7 @@ function navigate_to() {
 	do 
 		if [[ -d "${i}" ]]
 		then
-			printf "$(icon_file_type "${i}")";
+			icon_file_type "${i}"
 		fi
 	done
 
@@ -450,14 +450,14 @@ function navigate_to() {
 	do 
 		if [[ -f "${i}" ]]
 		then
-			printf "$(icon_file_type "${i}")";
+			icon_file_type "${i}"
 		fi
 	done
 }
 
 # Set XDG dir
 function return_xdg_dir() {
-	target_dir=$(echo "$1" | tr "[:lower:]" "[:upper:]")
+	target_dir=${1^^}
 
 	if [[ "HOME" == *"${target_dir}"* ]]
 	then
