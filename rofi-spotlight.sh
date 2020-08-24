@@ -457,7 +457,7 @@ function navigate_to() {
 
 # Set XDG dir
 function return_xdg_dir() {
-	target_dir=$(echo "$1" | tr "[:lower:]" "[:upper:]")
+	target_dir=${1^^}
 
 	if [[ "HOME" == *"${target_dir}"* ]]
 	then
