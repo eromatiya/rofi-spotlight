@@ -19,15 +19,15 @@ HIST_FILE="${MY_PATH}/history.txt"
 
 OPENER=xdg-open
 TERM_EMU=kitty
-TEXT_EDITOR=${EDITOR}
-FILE_MANAGER=dolphin
+TEXT_EDITOR=$EDITOR
+FILE_MANAGER=xdg-open
 BLUETOOTH_SEND=blueman-sendto
 
 CUR_DIR=$PWD
 
 NEXT_DIR=""
 
-SHOW_HIDDEN=false
+SHOW_HIDDEN=true
 
 declare -a SHELL_OPTIONS=(
 	"Run"
@@ -356,13 +356,16 @@ then
 		while read -r line
 		do
 			echo "$line" \?\?
-		done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+		done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 	else
 		# Find the file
-		find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
-		"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-		grep -av 'Permission denied\|Input/output error'
+		if [[ "${QUERY}" =~ '[\. ]' ]]
+        then
+		    fd -H ${QUERY:1} ${HOME} -x echo -ne \
+		    "{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+		    grep -av 'Permission denied\|Input/output error'
+        fi
 
 		# Web search
 		web_search "${QUERY}"
@@ -721,7 +724,7 @@ function context_menu() {
 
 			echo "${QUERY}" >> "${HIST_FILE}"
 
-			find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
+			fd -H ${QUERY#!} ${HOME} -x echo -ne \
 			"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
 			grep -av 'Permission denied\|Input/output error'
 

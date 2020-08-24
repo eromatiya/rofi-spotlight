@@ -14,6 +14,7 @@ This rofi will supposed to replace the web search in my awesome-wm setups.
 + `rofi-git master branch`
 + `python3`
 + `bash`
++ `fd`
 + `an icon theme (optional)`
 
 #### Icon themes used:
