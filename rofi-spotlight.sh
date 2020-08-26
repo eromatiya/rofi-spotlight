@@ -339,12 +339,14 @@ function find_query() {
 		then
 			while read -r line
 			do
+                [[ -z $line ]] && continue
 			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
 			done <<< $(find "${HOME}" -iname *"${QUERY:1}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 		else
             while read -r line
 		    do
+                [[ -z $line ]] && continue
 			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
 		    done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
 

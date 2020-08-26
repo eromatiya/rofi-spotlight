@@ -17,3 +17,10 @@ horrible
 !init.vim
 ?init.vim
 ?vim
+!halflife 3
+!halflife
+?cwecw
+?init.vim
+?qwqx
+!halflife 3
+!halflife
