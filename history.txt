@@ -24,3 +24,11 @@ horrible
 ?qwqx
 !halflife 3
 !halflife
+Rofi Spotlight
+!vim
+?vim
+!vim
+!vim
+!vim
+Rofi Spotlight
+!vim

@@ -341,14 +341,14 @@ function find_query() {
 			do
                 [[ -z $line ]] && continue
 			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-			done <<< $(find "${HOME}" -iname *"${QUERY:1}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+			done <<< $(find "${HOME}" -iname *"${QUERY}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 		else
             while read -r line
 		    do
                 [[ -z $line ]] && continue
 			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-		    done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
+		    done <<< $(fd -H ${QUERY} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
 
 		fi
     fi
@@ -378,14 +378,14 @@ then
 
 	elif [[ "$@" == \?* ]]
 	then
-	    find_query ${QUERY}	
+	    find_query ${QUERY#\?}	
 
 	else
 		# Find the file
-        find_query ${QUERY}
+        find_query ${QUERY#!}
 
 		# Web search
-		web_search "${QUERY}"
+		web_search "!${QUERY#!}"
 	fi
 	exit;
 fi
@@ -740,17 +740,8 @@ function context_menu() {
 			QUERY="${CUR_DIR//*\/\//}"
 
 			echo "${QUERY}" >> "${HIST_FILE}"
-
-			if [ ! -z "$FD_INSTALLED" ];
-			then
-				fd -H ${QUERY#!} ${HOME} -x echo -ne \
-				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-				grep -av 'Permission denied\|Input/output error'
-			else
-				find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
-				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-				grep -av 'Permission denied\|Input/output error'
-			fi
+            
+            find_query ${QUERY#!}
 
 			web_search "!${QUERY}"
 		else
