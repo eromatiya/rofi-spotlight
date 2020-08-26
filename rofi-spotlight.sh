@@ -24,8 +24,8 @@ FILE_MANAGER=xdg-open
 BLUETOOTH_SEND=blueman-sendto
 
 CUR_DIR=$PWD
-
 NEXT_DIR=""
+FD_INSTALLED=$(command -v fd)
 
 SHOW_HIDDEN=true
 
@@ -106,7 +106,7 @@ COMBINED_OPTIONS=(
 
 # Remove duplicates
 while IFS= read -r -d '' x; do
-    ALL_OPTIONS+=("$x")
+	ALL_OPTIONS+=("$x")
 done < <(printf "%s\0" "${COMBINED_OPTIONS[@]}" | sort -uz)
 
 # Create tmp dir for rofi
@@ -353,19 +353,34 @@ then
 
 	elif [[ "$@" == \?* ]]
 	then
-		while read -r line
-		do
-			echo "$line" \?\?
-		done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
+		if [ ! -z "$FD_INSTALLED" ];
+		then
+			while read -r line
+			do
+				echo "$line" \?\?
+			done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+		else
+			while read -r line
+			do
+				echo "$line" \?\?
+			done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
+		fi
 
 	else
 		# Find the file
 		if [[ "${QUERY}" =~ '[\. ]' ]]
-        then
-		    fd -H ${QUERY:1} ${HOME} -x echo -ne \
-		    "{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-		    grep -av 'Permission denied\|Input/output error'
-        fi
+		then
+			if [ ! -z "$FD_INSTALLED" ];
+			then
+				fd -H ${QUERY:1} ${HOME} -x echo -ne \
+				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+				grep -av 'Permission denied\|Input/output error'
+			else
+				find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
+				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+				grep -av 'Permission denied\|Input/output error'
+			fi
+		fi
 
 		# Web search
 		web_search "${QUERY}"
@@ -724,9 +739,16 @@ function context_menu() {
 
 			echo "${QUERY}" >> "${HIST_FILE}"
 
-			fd -H ${QUERY#!} ${HOME} -x echo -ne \
-			"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-			grep -av 'Permission denied\|Input/output error'
+			if [ ! -z "$FD_INSTALLED" ];
+			then
+				fd -H ${QUERY#!} ${HOME} -x echo -ne \
+				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+				grep -av 'Permission denied\|Input/output error'
+			else
+				find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
+				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
+				grep -av 'Permission denied\|Input/output error'
+			fi
 
 			web_search "!${QUERY}"
 		else
