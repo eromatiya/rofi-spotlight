@@ -330,6 +330,29 @@ then
 	exit;
 fi
 
+function find_query() {
+    QUERY=${1}
+
+    if [[ ! "${QUERY}" =~ ( |\') ]]
+    then
+        if [ -z "$FD_INSTALLED" ];
+		then
+			while read -r line
+			do
+			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
+			done <<< $(find "${HOME}" -iname *"${QUERY:1}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+
+		else
+            while read -r line
+		    do
+			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
+		    done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
+
+		fi
+    fi
+
+}
+
 # File and calls to the web search
 if [ ! -z "$@" ] && ([[ "$@" == /* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
 then
@@ -353,34 +376,11 @@ then
 
 	elif [[ "$@" == \?* ]]
 	then
-		if [ ! -z "$FD_INSTALLED" ];
-		then
-			while read -r line
-			do
-				echo "$line" \?\?
-			done <<< $(find "${HOME}" -iname *"${QUERY#\?}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
-		else
-			while read -r line
-			do
-				echo "$line" \?\?
-			done <<< $(fd -H ${QUERY:1} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
-		fi
+	    find_query ${QUERY}	
 
 	else
 		# Find the file
-		if [[ "${QUERY}" =~ '[\. ]' ]]
-		then
-			if [ ! -z "$FD_INSTALLED" ];
-			then
-				fd -H ${QUERY:1} ${HOME} -x echo -ne \
-				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-				grep -av 'Permission denied\|Input/output error'
-			else
-				find "${HOME}" -iname *"${QUERY#!}"* -exec echo -ne \
-				"{}\0icon\x1f${MY_PATH}/icons/result.svg\n" \; 2>&1 | 
-				grep -av 'Permission denied\|Input/output error'
-			fi
-		fi
+        find_query ${QUERY}
 
 		# Web search
 		web_search "${QUERY}"
