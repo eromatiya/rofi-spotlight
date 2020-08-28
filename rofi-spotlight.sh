@@ -377,7 +377,7 @@ then
         find_query ${QUERY#!}
 
 		# Web search
-		web_search "!${QUERY#!}"
+		web_search "! ${QUERY#!}"
 	fi
 	exit;
 fi
