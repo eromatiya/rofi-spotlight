@@ -337,18 +337,10 @@ function find_query() {
     then
         if [ -z "$FD_INSTALLED" ];
 		then
-			while read -r line
-			do
-                [[ -z $line ]] && continue
-			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-			done <<< $(find "${HOME}" -iname *"${QUERY}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
+            find "${HOME}" -iname *"${QUERY}"* | sed "s/\/home\/$USER/\~/" | awk -v MY_PATH="${MY_PATH}" '{print ""$1"??\0icon\x1f"MY_PATH"/icons/result.svg"}'
 
 		else
-            while read -r line
-		    do
-                [[ -z $line ]] && continue
-			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-		    done <<< $(fd -H ${QUERY} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
+            fd -H ${QUERY} ${HOME} | sed "s/\/home\/$USER/\~/" | awk -v MY_PATH="${MY_PATH}" '{print ""$1"??\0icon\x1f"MY_PATH"/icons/result.svg"}'
 
 		fi
     fi
@@ -385,7 +377,7 @@ then
         find_query ${QUERY#!}
 
 		# Web search
-		web_search "!${QUERY#!}"
+		web_search "! ${QUERY#!}"
 	fi
 	exit;
 fi
