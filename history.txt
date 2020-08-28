@@ -32,3 +32,7 @@ Rofi Spotlight
 !vim
 Rofi Spotlight
 !vim
+?vim
+?init.vim
+?init.vim
+?init.vim
