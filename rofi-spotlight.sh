@@ -289,6 +289,7 @@ function icon_file_type(){
 
 	echo -en "$1\0icon\x1f$icon_name\n"
 }
+export -f icon_file_type
 
 
 # Pass the argument to python script
@@ -425,43 +426,58 @@ function navigate_to() {
 	fi
 
 	printf "..\0icon\x1fup\n"
+
+    if [[ -z "$FD_INSTALLED" ]]
+    then
+        #Group directories
+        if [[ ${SHOW_HIDDEN} == true ]]
+	    then
+		    for i in .*/
+		    do
+			    if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
+			    then
+				    icon_file_type "${i}"
+			    fi
+		    done
+	    fi
+	    for i in */
+	    do 
+		    if [[ -d "${i}" ]]
+		    then
+			    icon_file_type "${i}"
+		    fi
+	    done
+        #Group files
+	    if [[ ${SHOW_HIDDEN} == true ]]
+	    then
+		    for i in .*
+		    do 
+			    if [[ -f "${i}" ]]
+			    then
+				    icon_file_type "${i}"
+			    fi
+		    done
+        fi
+	    for i in *
+	    do 
+		    if [[ -f "${i}" ]]
+		    then
+			    icon_file_type "${i}"
+		    fi
+	    done
+    else
+        THREADS=$(getconf _NPROCESSORS_ONLN)
+        if [[ ${SHOW_HIDDEN} == true ]]
+        then
+            fd -Ht d -d 1 -x bash -c 'icon_file_type "$0/"' {} | sort -V --parallel=$THREADS 
+            fd -Ht f -d 1 -x bash -c 'icon_file_type $0' {} | sort -V --parallel=$THREADS
+        else
+            fd -t d -d 1 -x bash -c 'icon_file_type "$0/"' {} | sort -V --parallel=$THREADS 
+            fd -t f -d 1 -x bash -c 'icon_file_type $0' {} | sort -V --parallel=$THREADS
+	    fi
+    fi
+
 	
-	if [[ ${SHOW_HIDDEN} == true ]]
-	then
-
-		for i in .*/
-		do
-			if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
-			then
-				icon_file_type "${i}"
-			fi
-		done
-
-		for i in .*
-		do 
-			if [[ -f "${i}" ]]
-			then
-				icon_file_type "${i}"
-			fi
-		done
-
-	fi
-
-	for i in */
-	do 
-		if [[ -d "${i}" ]]
-		then
-			icon_file_type "${i}"
-		fi
-	done
-
-	for i in *
-	do 
-		if [[ -f "${i}" ]]
-		then
-			icon_file_type "${i}"
-		fi
-	done
 }
 
 # Set XDG dir
