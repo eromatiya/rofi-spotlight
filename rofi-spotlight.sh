@@ -339,10 +339,10 @@ function find_query() {
         if [ -z "$FD_INSTALLED" ];
 		then
             find "${HOME}" -iname *"${QUERY}"* | sed "s/\/home\/$USER/\~/" |
-            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
+            	awk -v MY_PATH="${MY_PATH}" '{print $0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		else
             fd -H ${QUERY} ${HOME} | sed "s/\/home\/$USER/\~/" |
-            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
+            	awk -v MY_PATH="${MY_PATH}" '{print $0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		fi
     fi
 }
@@ -357,7 +357,6 @@ then
     if [[ "$@" == ?(\~)/* ]]
 	then
         [[ "$*" = \~* ]] && QUERY="${QUERY//"~"/"$HOME"}"
-        [[ "$*" = *\?\? ]] && QUERY="${QUERY%\/*\?\?}"
 
 		${OPENER} "${QUERY}" > /dev/null 2>&1 |
 		exec 1>&-
