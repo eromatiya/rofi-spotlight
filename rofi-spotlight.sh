@@ -27,7 +27,7 @@ CUR_DIR=$PWD
 NEXT_DIR=""
 FD_INSTALLED=$(command -v fd)
 
-SHOW_HIDDEN=true
+SHOW_HIDDEN=false
 
 declare -a SHELL_OPTIONS=(
 	"Run"
@@ -289,6 +289,7 @@ function icon_file_type(){
 
 	echo -en "$1\0icon\x1f$icon_name\n"
 }
+export -f icon_file_type
 
 
 # Pass the argument to python script
@@ -337,22 +338,13 @@ function find_query() {
     then
         if [ -z "$FD_INSTALLED" ];
 		then
-			while read -r line
-			do
-                [[ -z $line ]] && continue
-			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-			done <<< $(find "${HOME}" -iname *"${QUERY}"* 2>&1 | grep -v 'Permission denied\|Input/output error')
-
+            find "${HOME}" -iname *"${QUERY}"* | sed "s/\/home\/$USER/\~/" |
+            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		else
-            while read -r line
-		    do
-                [[ -z $line ]] && continue
-			    echo -en "$line??\0icon\x1f${MY_PATH}/icons/result.svg\n"
-		    done <<< $(fd -H ${QUERY} ${HOME} 2>&1 | grep -v 'Permission denied\|Input/output error')
-
+            fd -H ${QUERY} ${HOME} | sed "s/\/home\/$USER/\~/" |
+            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		fi
     fi
-
 }
 
 # File and calls to the web search
@@ -385,7 +377,7 @@ then
         find_query ${QUERY#!}
 
 		# Web search
-		web_search "!${QUERY#!}"
+		web_search "! ${QUERY#!}"
 	fi
 	exit;
 fi
@@ -433,43 +425,56 @@ function navigate_to() {
 	fi
 
 	printf "..\0icon\x1fup\n"
-	
-	if [[ ${SHOW_HIDDEN} == true ]]
-	then
 
-		for i in .*/
-		do
-			if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
-			then
-				icon_file_type "${i}"
-			fi
-		done
-
-		for i in .*
-		do 
-			if [[ -f "${i}" ]]
-			then
-				icon_file_type "${i}"
-			fi
-		done
-
-	fi
-
-	for i in */
-	do 
-		if [[ -d "${i}" ]]
-		then
-			icon_file_type "${i}"
-		fi
-	done
-
-	for i in *
-	do 
-		if [[ -f "${i}" ]]
-		then
-			icon_file_type "${i}"
-		fi
-	done
+    if [[ -z "$FD_INSTALLED" ]]
+    then
+        #Group directories
+        if [[ ${SHOW_HIDDEN} == true ]]
+	    then
+		    for i in .*/
+		    do
+			    if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
+			    then
+				    icon_file_type "${i}"
+			    fi
+		    done
+	    fi
+	    for i in */
+	    do 
+		    if [[ -d "${i}" ]]
+		    then
+			    icon_file_type "${i}"
+		    fi
+	    done
+        #Group files
+	    if [[ ${SHOW_HIDDEN} == true ]]
+	    then
+		    for i in .*
+		    do 
+			    if [[ -f "${i}" ]]
+			    then
+				    icon_file_type "${i}"
+			    fi
+		    done
+        fi
+	    for i in *
+	    do 
+		    if [[ -f "${i}" ]]
+		    then
+			    icon_file_type "${i}"
+		    fi
+	    done
+    else
+        THREADS=$(getconf _NPROCESSORS_ONLN)
+        if [[ ${SHOW_HIDDEN} == true ]]
+        then
+            fd -Ht d -d 1 -x bash -c 'icon_file_type "$0/"' {} | sort -V --parallel=$THREADS 
+            fd -Ht f -d 1 -x bash -c 'icon_file_type $0' {} | sort -V --parallel=$THREADS
+        else
+            fd -t d -d 1 -x bash -c 'icon_file_type "$0/"' {} | sort -V --parallel=$THREADS 
+            fd -t f -d 1 -x bash -c 'icon_file_type $0' {} | sort -V --parallel=$THREADS
+	    fi
+    fi	
 }
 
 # Set XDG dir
