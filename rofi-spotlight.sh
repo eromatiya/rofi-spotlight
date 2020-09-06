@@ -348,25 +348,20 @@ function find_query() {
 }
 
 # File and calls to the web search
-if [ ! -z "$@" ] && ([[ "$@" == /* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
+if [ ! -z "$@" ] && ([[ "$@" == ?(\~)/* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
 then
 	QUERY=$@
 
 	echo "${QUERY}" >> "${HIST_FILE}"
 
-	if [[ "$@" == /* ]]
+    if [[ "$@" == ?(\~)/* ]]
 	then
-	
-		if [[ "$@" == *\?\? ]]
-		then
-			coproc ( ${OPENER} "${QUERY%\/* \?\?}"  > /dev/null 2>&1 )
-			exec 1>&-
-			exit;
-		else
-			coproc ( ${OPENER} "$@"  > /dev/null 2>&1 )
-			exec 1>&-
-			exit;
-		fi
+        [[ "$*" = \~* ]] && QUERY="${QUERY//"~"/"$HOME"}"
+        [[ "$*" = *\?\? ]] && QUERY="${QUERY%\/*\?\?}"
+
+		${OPENER} "${QUERY}" > /dev/null 2>&1 |
+		exec 1>&-
+		exit
 
 	elif [[ "$@" == \?* ]]
 	then
