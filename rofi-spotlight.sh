@@ -339,15 +339,12 @@ function find_query() {
         if [ -z "$FD_INSTALLED" ];
 		then
             find "${HOME}" -iname *"${QUERY}"* | sed "s/\/home\/$USER/\~/" |
-                awk -v MY_PATH="${MY_PATH}" '{print ""$0"??\0icon\x1f"MY_PATH"/icons/result.svg"}'
-
+            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		else
             fd -H ${QUERY} ${HOME} | sed "s/\/home\/$USER/\~/" |
-                awk -v MY_PATH="${MY_PATH}" '{print ""$0"??\0icon\x1f"MY_PATH"/icons/result.svg"}'
-
+            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		fi
     fi
-
 }
 
 # File and calls to the web search
@@ -477,7 +474,7 @@ function navigate_to() {
             fd -t d -d 1 -x bash -c 'icon_file_type "$0/"' {} | sort -V --parallel=$THREADS 
             fd -t f -d 1 -x bash -c 'icon_file_type $0' {} | sort -V --parallel=$THREADS
 	    fi
-    fi
+    fi	
 }
 
 # Set XDG dir
