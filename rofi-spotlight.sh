@@ -339,34 +339,28 @@ function find_query() {
         if [ -z "$FD_INSTALLED" ];
 		then
             find "${HOME}" -iname *"${QUERY}"* | sed "s/\/home\/$USER/\~/" |
-            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
+            	awk -v MY_PATH="${MY_PATH}" '{print $0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		else
             fd -H ${QUERY} ${HOME} | sed "s/\/home\/$USER/\~/" |
-            	awk -v MY_PATH="${MY_PATH}" '{print ""$0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
+            	awk -v MY_PATH="${MY_PATH}" '{print $0"\0icon\x1f"MY_PATH"/icons/result.svg"}'
 		fi
     fi
 }
 
 # File and calls to the web search
-if [ ! -z "$@" ] && ([[ "$@" == /* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
+if [ ! -z "$@" ] && ([[ "$@" == ?(\~)/* ]] || [[ "$@" == \?* ]] || [[ "$@" == \!* ]])
 then
 	QUERY=$@
 
 	echo "${QUERY}" >> "${HIST_FILE}"
 
-	if [[ "$@" == /* ]]
+    if [[ "$@" == ?(\~)/* ]]
 	then
-	
-		if [[ "$@" == *\?\? ]]
-		then
-			coproc ( ${OPENER} "${QUERY%\/* \?\?}"  > /dev/null 2>&1 )
-			exec 1>&-
-			exit;
-		else
-			coproc ( ${OPENER} "$@"  > /dev/null 2>&1 )
-			exec 1>&-
-			exit;
-		fi
+        [[ "$*" = \~* ]] && QUERY="${QUERY//"~"/"$HOME"}"
+
+		${OPENER} "${QUERY}" > /dev/null 2>&1 |
+		exec 1>&-
+		exit
 
 	elif [[ "$@" == \?* ]]
 	then
