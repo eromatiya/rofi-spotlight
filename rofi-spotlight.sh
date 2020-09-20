@@ -491,10 +491,7 @@ then
 fi
 
 # Read last location, otherwise we default to PWD.
-if [ -f "${PREV_LOC_FILE}" ]
-then
-	CUR_DIR="$(cat "${PREV_LOC_FILE}")"
-fi
+[ -f "${PREV_LOC_FILE}" ] && CUR_DIR=$(< "${PREV_LOC_FILE}")
 
 if [[ ! -z "$@" ]] && ([[ "$@" == ":h" ]] || [[ "$@" == ":hidden" ]])
 then
@@ -504,63 +501,59 @@ then
 fi
 
 # Handle argument.
-if [ -n "$@" ]
-then
-	CUR_DIR="${CUR_DIR}/$@"
-fi
-
+[ -n "$*" ] && CUR_DIR="${CUR_DIR}/$*"
 
 # Context Menu
-if [[ ! -z "$@" ]] && [[ "${ALL_OPTIONS[*]} " == *"${1}"* ]]
+if [ -n "$*" ] && [[ "${ALL_OPTIONS[*]} " = *"$*"* ]]
 then
 	case "${1}" in
 		"Run" )
-			coproc ( eval "$(cat "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc ( eval "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Execute in ${TERM_EMU}" )
-			coproc ( eval "${TERM_EMU} "$(cat "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
+			coproc ( eval "${TERM_EMU} "$(< "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open" )
-			coproc ( eval "${OPENER} "$(cat "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
+			coproc ( eval "${OPENER} "$(< "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open file location in ${TERM_EMU}" )
-			file_path="$(cat "${CURRENT_FILE}")"
+			file_path="$(< "${CURRENT_FILE}")"
 			coproc ( ${TERM_EMU} bash -c "cd "${file_path%/*}" ; ${SHELL}" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open file location in ${FILE_MANAGER}" )
-			file_path="$(cat "${CURRENT_FILE}")"
+			file_path="$(< "${CURRENT_FILE}")"
 			coproc ( eval "${FILE_MANAGER} "${file_path%/*}"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Edit" )
-			coproc ( eval "${TERM_EMU} ${TEXT_EDITOR} $(cat "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc ( eval "${TERM_EMU} ${TEXT_EDITOR} $(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Move to trash" )
-			coproc( gio trash "$(cat "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc( gio trash "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
 			create_notification "trashed"
-			CUR_DIR="$(dirname $(cat "${CURRENT_FILE}"))"
+			CUR_DIR="$(dirname $(< "${CURRENT_FILE}"))"
 			navigate_to
 			;;
 		"Delete" )
-			shred "$(cat "${CURRENT_FILE}")"
-			rm "$(cat "${CURRENT_FILE}")"
+			shred "$(< "${CURRENT_FILE}")"
+			rm "$(< "${CURRENT_FILE}")"
 			create_notification "deleted"
-			CUR_DIR="$(dirname $(cat "${CURRENT_FILE}"))"
+			CUR_DIR="$(dirname $(< "${CURRENT_FILE}"))"
 			navigate_to
 			;;
 		"Send via Bluetooth" )
 			rfkill unblock bluetooth &&	bluetoothctl power on 
 			sleep 1
-			blueman-sendto "$(cat "${CURRENT_FILE}")" & > /dev/null 2>&1
+			blueman-sendto "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1
 			kill -9 $(pgrep rofi)
 			;;
 		"Back" )
-			CUR_DIR="$(cat "${PREV_LOC_FILE}")"
+			CUR_DIR="$(< "${PREV_LOC_FILE}")"
 			navigate_to
 			;;
 	esac
