@@ -1,14 +1,14 @@
-A Spotlight-like rofi. Supports file and web search. 
+## rofi: *spotlight*
 
-| File Browsing | Context Menu |
-| --- | --- |
-| ![screenshot](screenshots/main.png) | ![screenshot](screenshots/menu.png) |
+A spotlight-like rofi. Supports file and web search. 
 
-| Google Results | DuckDuckGo Results
-| --- | --- |
-| ![screenshot](screenshots/rofi-web-google.png) | ![screenshot](screenshots/rofi-web-ddg.png) |
-
-This rofi will supposed to replace the web search in my awesome-wm setups.
+<p align='center'>
+	<img alt='rofi: spotlight' src='scrot.webp'/>
+		<br/>
+		<i>
+			rofi: spotlight
+		</i>
+</p>
 
 #### Dependencies
 
@@ -32,7 +32,7 @@ $ rofi -modi "Global Search":"rofi-spotlight/rofi-spotlight.sh" -show "Global Se
 
 #### Recommendation
 
-+ Install `fd` for faster file searching. Defaults to `find` if not yet installed.
++ Install `fd` for faster file searching. Defaults to `find` if not installed.
 
 #### Configuration:
 
@@ -97,9 +97,11 @@ Examples:
 #### TODOs:
 
 - [x] Web search support
-- [ ] Cleaner bash script
+- [x] Cleaner bash script
 
 #### Notes:
 
-+ This is not a file manager nor a web browser. This is meant to be a file/web-searching rofi. Nothing else.
-+ Better with blur. Rofi's appearance can be change in `rofi.rasi`. It uses CSS syntax. More info by executing `man rofi-theme` in your terminal emulator.
++ This is not a file manager nor a web browser. This is a file/web-searching rofi. Nothing else.
++ Default rofi design is better with blur. Rofi's appearance can be change in `rofi.rasi`. It uses CSS syntax. More info by executing `man rofi-theme` in your terminal emulator.
+
+#### Credits to [these people](https://github.com/manilarome/rofi-spotlight/graphs/contributors)
