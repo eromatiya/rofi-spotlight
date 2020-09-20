@@ -76,58 +76,51 @@ COMBINED_OPTIONS=(
 ALL_OPTIONS=("$(printf '%s\n' "${COMBINED_OPTIONS[@]}" | sort -u)")
 
 # Create tmp dir for rofi
-if [ ! -d "${TMP_DIR}" ]
-then
-	mkdir -p "${TMP_DIR}";
-fi
+[ ! -d "${TMP_DIR}" ] && mkdir -p "${TMP_DIR}";
 
 # Create hist file if it doesn't exist
-if [ ! -f "${HIST_FILE}" ]
-then
-	touch "${HIST_FILE}"
-fi
+[ ! -f "${HIST_FILE}" ] && touch "${HIST_FILE}"
 
 # Help message
-if [[ ! -z "$@" ]] && [[ "$@" == ":help" ]]
-then
+if [ -n "$*" ] && [[ "$*" = ":help" ]]; then
+    echo -en "Rofi Spotlight
+A Rofi with file and web searching functionality
+ 
+Commands:
+:help to print this help message
+:h or :hidden to show hidden files/dirs
+:sh or :show_hist to show search history
+:ch or :clear_hist to clear search history
+:xdg to jump to an xdg directory
+Examples:
+	:xdg DOCUMENTS
+	:xdg DOWNLOADS
+Also supports incomplete path:
+Examples:
+	:xdg doc
+	:xdg down
+For more info about XDG dirs, see:
+\`man xdg-user-dir\`
+ 
+File search syntaxes:
+!<search_query> to search for a file and web suggestions
+?<search_query> to search parent directories
+Examples:
+	!half-life 3
+ 	?portal 3
+ 
+Web search syntaxes:
+!<search_query> to gets search suggestions
+:web/:w <search_query> to also to gets search suggestions
+:webbro/:wb <search_query> to search directly from your browser
+Examples:
+	!how to install archlinux
+	:web how to install gentoo
+	:w how to make a nuclear fission
+	:webbro how to install wine in windowsxp
+Back\0icon\x1fdraw-arrow-back\n"
 
-	echo "Rofi Spotlight"
-	echo "A Rofi with file and web searching functionality"
-	echo " "
-	echo "Commands:"
-	echo ":help to print this help message"
-	echo ":h or :hidden to show hidden files/dirs"
-	echo ":sh or :show_hist to show search history"
-	echo ":ch or :clear_hist to clear search history"
-	echo ":xdg to jump to an xdg directory"
-	echo "Examples:"
-	echo "	:xdg DOCUMENTS"
-	echo "	:xdg DOWNLOADS"
-	echo "Also supports incomplete path:"
-	echo "Examples:"
-	echo "	:xdg doc"
-	echo "	:xdg down"
-	echo "For more info about XDG dirs, see:"
-	echo "\`man xdg-user-dir\`"
-	echo " "
-	echo "File search syntaxes:"
-	echo "!<search_query> to search for a file and web suggestions"
-	echo "?<search_query> to search parent directories"
-	echo "Examples:"
-	echo "	!half-life 3"
-	echo " 	?portal 3"
-	echo " "
-	echo "Web search syntaxes:"
-	echo "!<search_query> to gets search suggestions"
-	echo ":web/:w <search_query> to also to gets search suggestions"
-	echo ":webbro/:wb <search_query> to search directly from your browser"
-	echo "Examples:"
-	echo "	!how to install archlinux"
-	echo "	:web how to install gentoo"
-	echo "	:w how to make a nuclear fission"
-	echo "	:webbro how to install wine in windowsxp"
-
-	exit;
+	exit
 fi
 
 # Return the icon string
