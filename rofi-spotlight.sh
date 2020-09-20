@@ -463,15 +463,12 @@ if [ ! -z "$@" ] && ([[ "$@" == ":sh" ]] || [[ "$@" == ":show_hist" ]])
 then
 	hist=$(tac "${HIST_FILE}")
 
-	if [ ! -n "${hist}" ]
-	then
-		printf ".\0icon\x1fback\n"
-		printf "No history, yet.\0icon\x1ftext-plain\n"
-	fi
+    echo -en "Back\0icon\x1fdraw-arrow-back\n"
+	[ -z "${hist}" ] && echo -en "No History Yet\0icon\x1ftext-plain\n"
 
 	while IFS= read -r line; 
 	do 
-		printf "${line}\0icon\x1f${MY_PATH}/icons/history.svg\n"; 
+		echo -en "${line}\0icon\x1f${MY_PATH}/icons/history.svg\n"; 
 	done <<< "${hist}"
 	
 	exit;
