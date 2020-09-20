@@ -82,7 +82,8 @@ ALL_OPTIONS=("$(printf '%s\n' "${COMBINED_OPTIONS[@]}" | sort -u)")
 [ ! -f "${HIST_FILE}" ] && touch "${HIST_FILE}"
 
 # Help message
-if [ -n "$*" ] && [[ "$*" = ":help" ]]; then
+if [ -n "$*" ] && [[ "$*" = ":help" ]]
+then
     echo -en "Rofi Spotlight
 A Rofi with file and web searching functionality
  
@@ -261,13 +262,7 @@ function web_search() {
 if [ ! -z "$@" ] && ([[ "$@" == ":webbro"* ]] || [[ "$@" == ":wb"* ]])
 then
 	remove=''
-
-	if [[ "$@" == ":webbro"* ]]
-	then
-		remove=":webbro"
-	else
-		remove=":wb"
-	fi
+	[[ "$*" = ":webbro"* ]] && remove=":webbro" || remove=":wb"
 
 	# Search directly from your web browser
 	web_search "$(printf '%s\n' "${1//$remove/}")"
@@ -276,13 +271,7 @@ then
 elif [ ! -z "$@" ] && ([[ "$@" == ":web"* ]] || [[ "$@" == ":w"* ]])
 then
 	remove=''
-
-	if [[ "$@" == ":web"* ]]
-	then
-		remove=":web"
-	else
-		remove=":w"
-	fi
+	[[ "$*" = ":web"* ]] && remove=":web" || remove=":w"
 
 	# Get search suggestions
 	web_search "!$(printf '%s\n' "${1//$remove/}")"
@@ -315,7 +304,7 @@ then
 	then
 		[[ "$*" = \~* ]] && QUERY="${QUERY//"~"/"$HOME"}"
 
-		${OPENER} "${QUERY}" > /dev/null 2>&1 |
+		coproc ${OPENER} "${QUERY}" > /dev/null 2>&1
 		exec 1>&-
 		exit
 
@@ -335,27 +324,28 @@ fi
 
 # Create notification if there's an error
 function create_notification() {
-	if [[ "${1}" == "denied" ]]
-	then
-		notify-send -a "Global Search" "<b>Permission denied!</b>" \
-		'You have no permission to access '"<b>${CUR_DIR}</b>!"
-	elif [[ "${1}" == "deleted" ]]
-	then
-		notify-send -a "Global Search" "<b>Success!</b>" \
-		'File deleted!'
-	elif [[ "${1}" == "trashed" ]]
-	then
-		notify-send -a "Global Search" "<b>Success!</b>" \
-		'The file has been moved to trash!'	
-	elif [[ "${1}" == "cleared" ]]
-	then
-		notify-send -a "Global Search" "<b>Success!</b>" \
-		'Search history has been successfully cleared!'
-
-	else
-		notify-send -a "Global Search" "<b>Somethings wrong I can feel it!</b>" \
-		'This incident will be reported!'
-	fi
+    case "${1}" in
+        "denied" )
+		    notify-send -a "Global Search" "Permission denied!" \
+		    'You have no permission to access '"${CUR_DIR}!"
+            ;;
+        "deleted" )
+		    notify-send -a "Global Search" "Success!" \
+		    'File deleted!'
+            ;;
+        "trashed" )
+		    notify-send -a "Global Search" "Success!" \
+		    'The file has been moved to trash!'	
+            ;;
+        "cleared" )
+		    notify-send -a "Global Search" "Success!" \
+		    'Search history has been successfully cleared!'
+            ;;
+        * )
+		    notify-send -a "Global Search" "Somethings wrong I can feel it!" \
+		    'This incident will be reported!'
+            ;;
+    esac
 }
 
 # Show the files in the current directory
