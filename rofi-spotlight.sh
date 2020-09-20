@@ -20,66 +20,48 @@ FD_INSTALLED=$(command -v fd)
 
 SHOW_HIDDEN=false
 
-declare -a SHELL_OPTIONS=(
-	"Run"
-	"Execute in ${TERM_EMU}"
-	"Edit"
+# Setup menu options
+declare -a OPEN_FILE_LOCATION=(
 	"Open file location in ${TERM_EMU}"
 	"Open file location in ${FILE_MANAGER}"
+)
+declare -a RUN_COMMANDS=(
+	"Run"
+	"Execute in ${TERM_EMU}"
+)
+declare -a STANDARD_CONTROLS=(
 	"Move to trash"
 	"Delete"
 	"Back"
 )
-
 declare -a SHELL_NO_X_OPTIONS=(
 	"Edit"
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
-	"Move to trash"
-	"Delete"
-	"Back"
+	"${OPEN_FILE_LOCATION[@]}"
+    "${STANDARD_CONTROLS[@]}"
 )
-
-declare -a BIN_OPTIONS=(
-	"Run"
-	"Execute in ${TERM_EMU}"
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
-	"Back"
+declare -a SHELL_OPTIONS=(
+    "${RUN_COMMANDS[@]}"
+    "${SHELL_NO_X_OPTIONS[@]}"
 )
-
 declare -a BIN_NO_X_OPTIONS=(
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
+	"${OPEN_FILE_LOCATION[@]}"
 	"Back"
 )
-
-declare -a TEXT_OPTIONS=(
-	"Edit"
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
-	"Move to trash"
-	"Delete"
-	"Back"
+declare -a BIN_OPTIONS=(
+    "${RUN_COMMANDS[@]}"
+    "${BIN_NO_X_OPTIONS[@]}"
 )
-
+declare -a TEXT_OPTIONS=("${SHELL_NO_X_OPTIONS[@]}")
 declare -a XCF_SVG_OPTIONS=(
 	"Open"
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
-	"Move to trash"
-	"Delete"
-	"Back"
+	"${OPEN_FILE_LOCATION[@]}"
+    "${STANDARD_CONTROLS[@]}"
 )
-
 declare -a IMAGE_OPTIONS=(
 	"Open"
 	"Send via Bluetooth"
-	"Open file location in ${TERM_EMU}"
-	"Open file location in ${FILE_MANAGER}"
-	"Move to trash"
-	"Delete"
-	"Back"
+	"${OPEN_FILE_LOCATION[@]}"
+    "${STANDARD_CONTROLS[@]}"
 )
 
 declare -a ALL_OPTIONS=()
@@ -87,18 +69,11 @@ declare -a ALL_OPTIONS=()
 # Combine all context menu
 COMBINED_OPTIONS=(
 	"${SHELL_OPTIONS[@]}"
-	"${SHELL_NO_X_OPTIONS[@]}"
-	"${BIN_OPTIONS[@]}"
-	"${BIN_NO_X_OPTIONS[@]}"
-	"${TEXT_OPTIONS[@]}"
-	"${XCF_SVG_OPTIONS[@]}"
 	"${IMAGE_OPTIONS[@]}"
 )
 
 # Remove duplicates
-while IFS= read -r -d '' x; do
-	ALL_OPTIONS+=("$x")
-done < <(printf "%s\0" "${COMBINED_OPTIONS[@]}" | sort -uz)
+ALL_OPTIONS=("$(printf '%s\n' "${COMBINED_OPTIONS[@]}" | sort -u)")
 
 # Create tmp dir for rofi
 if [ ! -d "${TMP_DIR}" ]
