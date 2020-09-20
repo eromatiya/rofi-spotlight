@@ -100,7 +100,7 @@ mainbox {
 	background-color: @background-black;
 	children: [ inputbar, listview ];
 	spacing: 25px;
-	padding: 50px 25px 50px 25px;
+	padding: 40px 25px 25px 25px;
 }
 
 element {
