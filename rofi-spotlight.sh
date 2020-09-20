@@ -485,15 +485,9 @@ fi
 # Accepts XDG command
 if [[ ! -z "$@" ]] && [[ "$@" == ":xdg"* ]]
 then
+	NEXT_DIR=${*//":xdg "/}
 
-	NEXT_DIR="$(echo "$@" | awk '{print $2}')"
-
-	if [[ ! -z "$NEXT_DIR" ]]
-	then
-		return_xdg_dir "${NEXT_DIR}"
-	else
-		return_xdg_dir "${HOME}"
-	fi
+	[[ -n "$NEXT_DIR" ]] && return_xdg_dir "${NEXT_DIR}" || return_xdg_dir "${HOME}"
 fi
 
 # Read last location, otherwise we default to PWD.
