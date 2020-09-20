@@ -508,20 +508,20 @@ if [ -n "$*" ] && [[ "${ALL_OPTIONS[*]} " = *"$*"* ]]
 then
 	case "${1}" in
 		"Run" )
-			coproc ( eval "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc ( eval "$(< ${CURRENT_FILE})" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Execute in ${TERM_EMU}" )
-			coproc ( eval "${TERM_EMU} "$(< "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
+			coproc ( eval "${TERM_EMU} \"$(< ${CURRENT_FILE})\"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open" )
-			coproc ( eval "${OPENER} "$(< "${CURRENT_FILE}")"" & > /dev/null 2>&1 )
+			coproc ( eval "${OPENER} \"$(< ${CURRENT_FILE})\"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open file location in ${TERM_EMU}" )
-			file_path="$(< "${CURRENT_FILE}")"
-			coproc ( ${TERM_EMU} bash -c "cd "${file_path%/*}" ; ${SHELL}" & > /dev/null 2>&1 )
+			file_path="$(< ${CURRENT_FILE})"
+			coproc ( ${TERM_EMU} bash -c "cd ${file_path%/*} ; ${SHELL}" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Open file location in ${FILE_MANAGER}" )
@@ -530,30 +530,30 @@ then
 			kill -9 $(pgrep rofi)
 			;;
 		"Edit" )
-			coproc ( eval "${TERM_EMU} ${TEXT_EDITOR} $(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc ( eval "${TERM_EMU} ${TEXT_EDITOR} \"$(< ${CURRENT_FILE})\"" & > /dev/null 2>&1 )
 			kill -9 $(pgrep rofi)
 			;;
 		"Move to trash" )
-			coproc( gio trash "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1 )
+			coproc( gio trash "$(< ${CURRENT_FILE})" & > /dev/null 2>&1 )
 			create_notification "trashed"
-			CUR_DIR="$(dirname $(< "${CURRENT_FILE}"))"
+			CUR_DIR="$(dirname "$(< ${CURRENT_FILE})")"
 			navigate_to
 			;;
 		"Delete" )
-			shred "$(< "${CURRENT_FILE}")"
-			rm "$(< "${CURRENT_FILE}")"
+			shred "$(< ${CURRENT_FILE})"
+			rm "$(< ${CURRENT_FILE})"
 			create_notification "deleted"
-			CUR_DIR="$(dirname $(< "${CURRENT_FILE}"))"
+			CUR_DIR="$(dirname "$(< ${CURRENT_FILE})")"
 			navigate_to
 			;;
 		"Send via Bluetooth" )
 			rfkill unblock bluetooth &&	bluetoothctl power on 
 			sleep 1
-			blueman-sendto "$(< "${CURRENT_FILE}")" & > /dev/null 2>&1
+			blueman-sendto "$(< ${CURRENT_FILE})" & > /dev/null 2>&1
 			kill -9 $(pgrep rofi)
 			;;
 		"Back" )
-			CUR_DIR="$(< "${PREV_LOC_FILE}")"
+			CUR_DIR="$(< ${PREV_LOC_FILE})"
 			navigate_to
 			;;
 	esac
