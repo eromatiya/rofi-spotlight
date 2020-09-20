@@ -360,9 +360,9 @@ function navigate_to() {
 			create_notification "denied"
 	
 		else
-			echo "${CUR_DIR}/" > "${PREV_LOC_FILE}"
+			echo "${CUR_DIR}" > "${PREV_LOC_FILE}"
 		fi
-		pushd "${CUR_DIR}" >/dev/null
+		pushd "${CUR_DIR}" >/dev/null || exit
 	fi
 
 	printf "..\0icon\x1fup\n"
@@ -374,36 +374,24 @@ function navigate_to() {
 		then
 			for i in .*/
 			do
-				if [[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]])
-				then
-					icon_file_type "${i}"
-				fi
+				[[ -d "${i}" ]] && ([[ "${i}" != "./" ]] && [[ "${i}" != "../"* ]]) && icon_file_type "${i}"
 			done
 		fi
 		for i in */
 		do 
-			if [[ -d "${i}" ]]
-			then
-				icon_file_type "${i}"
-			fi
+			[[ -d "${i}" ]] && icon_file_type "${i}"
 		done
 		#Group files
-		if [[ ${SHOW_HIDDEN} == true ]]
+		if [[ ${SHOW_HIDDEN} = true ]]
 		then
 			for i in .*
 			do 
-				if [[ -f "${i}" ]]
-				then
-					icon_file_type "${i}"
-				fi
+				[[ -f "${i}" ]] && icon_file_type "${i}"
 			done
 		fi
 		for i in *
 		do 
-			if [[ -f "${i}" ]]
-			then
-				icon_file_type "${i}"
-			fi
+			[[ -f "${i}" ]] && icon_file_type "${i}"
 		done
 	else
 		THREADS=$(getconf _NPROCESSORS_ONLN)
