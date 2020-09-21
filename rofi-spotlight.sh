@@ -360,7 +360,7 @@ function navigate_to() {
 			create_notification "denied"
 	
 		else
-			echo "${CUR_DIR}" > "${PREV_LOC_FILE}"
+			echo "${CUR_DIR}/" > "${PREV_LOC_FILE}"
 		fi
 		pushd "${CUR_DIR}" >/dev/null || exit
 	fi
