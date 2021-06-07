@@ -7,7 +7,6 @@ configuration {
 	matching: "fuzzy";
 	scroll-method: 0;
 	disable-history: false;
-	fullscreen: false;
 	window-thumbnail: true;
 }
 
